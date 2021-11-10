@@ -1,6 +1,5 @@
 import axios from "axios"
 const url = "/api/post"
-
 export default class API{
     //get all the posts from the server
     static async getAllPost(){

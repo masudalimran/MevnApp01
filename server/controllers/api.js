@@ -56,7 +56,7 @@ module.exports = class API {
             res.status(404).json(error.message)
         }
     }
-    //Update post
+    //Delete post
     static async deletePost(req, res){
         const ID = req.params.postId
         try {

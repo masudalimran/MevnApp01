@@ -3,9 +3,9 @@
     <v-row no-gutters>
       <v-col sm='10' class="mx-auto">
         <v-card class="pa-5">
-          <v-card-title>Add New Post</v-card-title>
+          <v-card-title>Edit Post</v-card-title>
           <v-divider></v-divider>
-          <v-form ref="form" @submit.prevent="submitForm" class="pa-5" enctype="mutipart/form-data">
+          <v-form ref="form" @submit.prevent="updateForm" class="pa-5" enctype="mutipart/form-data">
             <v-text-field label="Title" v-model="post.title" prepend-icon="mdi-note" :rules="rules"></v-text-field>
             <v-text-field label="Category" v-model="post.category" prepend-icon="mdi-view-list" :rules="rules"></v-text-field>
             <v-textarea label="Content" v-model="post.content" prepend-icon="mdi-note-plus" :rules="rules"></v-textarea>
@@ -13,7 +13,10 @@
               <v-col sm='3'>
                 <v-file-input @change='selectFile' :rules="rules" show-size counter multiple label="Select Image"></v-file-input>
               </v-col>
-              <v-btn type="submit" class="mt-10 ml-auto" color="primary"> Submit </v-btn>
+              <v-col sm='3'>
+                <v-img :src="`/img/${post.image}`" width=120></v-img>
+              </v-col>
+              <v-btn type="submit" class="mt-10 ml-auto" color="success"> Update Post </v-btn>
             </v-row>
           </v-form>
         </v-card>
@@ -37,19 +40,24 @@ export default {
       image: ''
     }
   },
+  async created(){
+      const response = await API.getPostById(this.$route.params.id)
+      this.post = response
+  },
   methods:{
     selectFile(file){
       this.image = file[0]
     },
-    async submitForm(){
+    async updateForm(){
       const formData = new FormData()
       formData.append('image', this.image)
       formData.append('title', this.post.title)
       formData.append('category', this.post.category)
       formData.append('content', this.post.content)
+      formData.append('oldImage', this.post.image)
       if(this.$refs.form.validate()){
-        const response = await API.createPost(formData)
-        this.$router.push({name: 'Home', params: {message: response.message}})
+        const response = await API.updatePost(this.$route.params.id, formData)
+        this.$router.push({name: 'Home', params: {message_update: response.message}})
       }
     }
   }

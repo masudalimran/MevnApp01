@@ -1,8 +1,17 @@
 <template>
   <v-container>
+    <v-alert border='left' close-text='Close Alert' color='green accent-4' dark dismissible v-if="this.$route.params.message">
+      {{this.$route.params.message}}
+    </v-alert>
+    <v-alert border='left' close-text='Close Alert' color='orange accent-4' dark dismissible v-if="this.$route.params.message_update">
+      {{this.$route.params.message_update}}
+    </v-alert> 
+    <v-alert border='left' close-text='Close Alert' color='red accent-4' dark dismissible v-if="this.$route.params.message_delete">
+      {{this.$route.params.message_delete}}
+    </v-alert>
     <v-row no-gutters>
       <v-col sm="4" class="pa-3" v-for="post in posts" :key="post._id">
-        <v-card class="pa-1">
+        <v-card class="pa-1" :to="{ name: 'Post', params: {id: post._id} }">
           <v-img 
             height="250"
             :src="`/img/${post.image}`">
